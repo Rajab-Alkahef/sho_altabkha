@@ -40,5 +40,7 @@
   "delete_confirm": "Remove this food from the list?",
   "filters_title": "Filters",
   "filters_reset_message": "No meals matched your filters — filters were reset.",
-  "language": "Language"
+  "language": "Language",
+  "theme_dark": "Switch to dark mode",
+  "theme_light": "Switch to light mode"
 }

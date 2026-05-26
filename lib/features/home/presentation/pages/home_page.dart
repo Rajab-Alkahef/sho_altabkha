@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/theme_mode_provider.dart';
 import '../../../food/domain/entities/food.dart';
 import '../../../food/domain/entities/food_filter.dart';
 import '../../../food/domain/usecases/spin_wheel_usecase.dart';
@@ -72,9 +73,17 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     final wheel = ref.watch(wheelFoodsProvider);
 
+    final themeMode = ref.watch(themeModeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('app_title'.tr()),
+        leading: IconButton(
+          tooltip: 'manage_foods'.tr(),
+          onPressed: () => context.push(AppRoutes.foods),
+          icon: const Icon(Icons.restaurant_menu_rounded),
+        ),
         actions: [
           IconButton(
             tooltip: 'language'.tr(),
@@ -87,9 +96,14 @@ class _HomePageState extends ConsumerState<HomePage> {
             icon: const Icon(Icons.language_rounded),
           ),
           IconButton(
-            tooltip: 'manage_foods'.tr(),
-            onPressed: () => context.push(AppRoutes.foods),
-            icon: const Icon(Icons.restaurant_menu_rounded),
+            tooltip: isDark ? 'theme_light'.tr() : 'theme_dark'.tr(),
+            onPressed: () =>
+                ref.read(themeModeProvider.notifier).toggle(),
+            icon: Icon(
+              isDark
+                  ? Icons.light_mode_rounded
+                  : Icons.dark_mode_rounded,
+            ),
           ),
         ],
       ),
