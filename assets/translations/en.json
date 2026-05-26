@@ -37,5 +37,6 @@
   "cancel": "Cancel",
   "delete_confirm": "Remove this food from the list?",
   "filters_title": "Filters",
+  "filters_reset_message": "No meals matched your filters — filters were reset.",
   "language": "Language"
 }

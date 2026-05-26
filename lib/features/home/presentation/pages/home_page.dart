@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../food/domain/entities/food.dart';
+import '../../../food/domain/entities/food_filter.dart';
 import '../../../food/domain/usecases/spin_wheel_usecase.dart';
 import '../../../food/presentation/providers/food_providers.dart';
 import '../widgets/filter_bottom_sheet.dart';
@@ -31,8 +33,43 @@ class _HomePageState extends ConsumerState<HomePage> {
     _wheelKey.currentState?.spinToWinner(idx);
   }
 
+  bool _hasActiveFilter(FoodFilter f) {
+    return f.mealType != null ||
+        f.ramadanOnly ||
+        f.dietOnly ||
+        f.favoritesOnly;
+  }
+
+  void _maybeAutoResetFilters() {
+    final wheelItems =
+        ref.read(wheelFoodsProvider).valueOrNull ?? const <Food>[];
+    if (wheelItems.isNotEmpty) return;
+    final allFoods = ref.read(foodsProvider).valueOrNull ?? const <Food>[];
+    if (allFoods.isEmpty) return;
+    final filter = ref.read(foodFilterProvider).valueOrNull;
+    if (filter == null || !_hasActiveFilter(filter)) return;
+
+    ref
+        .read(foodFilterProvider.notifier)
+        .setFilter(const FoodFilter());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text('filters_reset_message'.tr())),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<List<Food>>>(wheelFoodsProvider, (prev, next) {
+      next.whenData((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _maybeAutoResetFilters();
+        });
+      });
+    });
+
     final wheel = ref.watch(wheelFoodsProvider);
 
     return Scaffold(
