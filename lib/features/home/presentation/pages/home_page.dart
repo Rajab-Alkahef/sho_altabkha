@@ -133,13 +133,16 @@ class _HomePageState extends ConsumerState<HomePage> {
             children: [
               Expanded(
                 child: Center(
-                  child: FortuneWheel(
-                    key: _wheelKey,
-                    items: items,
-                    onSpinStatusChanged: (v) => setState(() => _busy = v),
-                    onSpinComplete: (food) {
-                      context.push(AppRoutes.result, extra: food);
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: FortuneWheel(
+                      key: _wheelKey,
+                      items: items,
+                      onSpinStatusChanged: (v) => setState(() => _busy = v),
+                      onSpinComplete: (food) {
+                        context.push(AppRoutes.result, extra: food);
+                      },
+                    ),
                   ),
                 ),
               ),
