@@ -68,7 +68,8 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     final themeMode = ref.watch(themeModeProvider);
     final isDark = themeMode == ThemeMode.dark;
-
+    ThemeData theme = Theme.of(context);
+    TextTheme textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppBar(
         title: Text('app_title'.tr()),
@@ -150,7 +151,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                       child: OutlinedButton.icon(
                         onPressed: () => showFilterSheet(context, ref),
                         icon: const Icon(Icons.tune_rounded),
-                        label: Text('filters'.tr()),
+                        label: Text(
+                          'filters'.tr(),
+                          style: textTheme.bodyMedium,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -158,10 +162,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                       flex: 2,
                       child: FilledButton.icon(
                         onPressed: _busy ? null : _onSpin,
-                        icon: const Icon(Icons.casino_rounded),
-                        label: Text('spin'.tr()),
+                        icon: Icon(
+                          Icons.casino_rounded,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                        label: Text('spin'.tr(), style: textTheme.bodyLarge),
                         style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: theme.colorScheme.primaryContainer,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
                       ),
                     ),

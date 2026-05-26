@@ -22,6 +22,7 @@
   "name": "Name",
   "category": "Category",
   "tags": "Tags (comma separated)",
+  "tags_show": "Tags",
   "tags_hint": "e.g. quick, healthy",
   "description": "Description",
   "description_hint": "Short description, ingredients or notes",

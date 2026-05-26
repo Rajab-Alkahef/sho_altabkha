@@ -16,17 +16,15 @@ class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    ThemeData theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     final hasImage =
         food.imagePath != null && File(food.imagePath!).existsSync();
     final description = food.description?.trim();
     final hasDescription = description != null && description.isNotEmpty;
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('result_title'.tr()),
-      ),
+      appBar: AppBar(title: Text('result_title'.tr())),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
@@ -106,10 +104,7 @@ class ResultPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    description,
-                    style: textTheme.bodyLarge,
-                  ),
+                  Text(description, style: textTheme.bodyLarge),
                 ],
               ),
             ),
@@ -121,7 +116,7 @@ class ResultPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'tags'.tr(),
+                    'tags_show'.tr(),
                     style: textTheme.titleSmall?.copyWith(
                       color: scheme.onSurfaceVariant,
                       letterSpacing: 0.4,
@@ -147,10 +142,14 @@ class ResultPage extends StatelessWidget {
           const SizedBox(height: 28),
           FilledButton.icon(
             onPressed: () => context.pop(),
-            icon: const Icon(Icons.casino_rounded),
-            label: Text('spin_again'.tr()),
+            icon: Icon(
+              Icons.casino_rounded,
+              color: theme.colorScheme.onSurface,
+            ),
+            label: Text('spin_again'.tr(), style: textTheme.bodyLarge),
             style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: theme.colorScheme.primaryContainer,
+              padding: const EdgeInsets.symmetric(vertical: 10),
             ),
           ),
           const SizedBox(height: 8),
@@ -203,10 +202,7 @@ class _Badge extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             label,
-            style: TextStyle(
-              color: foreground,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: foreground, fontWeight: FontWeight.w600),
           ),
         ],
       ),
