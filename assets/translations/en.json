@@ -32,6 +32,8 @@
   "save": "Save",
   "delete": "Delete",
   "favorite": "Favorite",
+  "hide_from_wheel": "Hide from wheel",
+  "show_in_wheel": "Show in wheel",
   "validation_name": "Please enter a name",
   "empty_list": "No foods yet. Add your first meal!",
   "cancel": "Cancel",

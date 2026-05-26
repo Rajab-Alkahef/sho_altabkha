@@ -4,7 +4,7 @@ import '../entities/food_filter.dart';
 /// Applies UI filters before the wheel is built.
 class FilterFoodsUseCase {
   List<Food> call(List<Food> all, FoodFilter filter) {
-    var list = List<Food>.from(all);
+    var list = all.where((f) => f.isVisible).toList();
 
     if (filter.mealType != null) {
       list = list

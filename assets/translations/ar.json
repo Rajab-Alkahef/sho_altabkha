@@ -32,6 +32,8 @@
   "save": "حفظ",
   "delete": "حذف",
   "favorite": "مفضلة",
+  "hide_from_wheel": "إخفاء من العجلة",
+  "show_in_wheel": "إظهار في العجلة",
   "validation_name": "يرجى إدخال الاسم",
   "empty_list": "لا توجد أطعمة بعد. أضف أول وجبة!",
   "cancel": "إلغاء",

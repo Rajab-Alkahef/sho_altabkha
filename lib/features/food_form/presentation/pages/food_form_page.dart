@@ -122,6 +122,7 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
       isRamadan: _isRamadan,
       isDiet: _isDiet,
       description: descriptionText.isEmpty ? null : descriptionText,
+      isVisible: existing?.isVisible ?? true,
     );
 
     await sl<AddFoodUseCase>()(food);

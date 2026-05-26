@@ -12,6 +12,7 @@ class Food {
     this.isRamadan = false,
     this.isDiet = false,
     this.description,
+    this.isVisible = true,
   });
 
   final String id;
@@ -24,6 +25,9 @@ class Food {
   final bool isDiet;
   final String? description;
 
+  /// When false, the food stays in the user's list but is excluded from the wheel.
+  final bool isVisible;
+
   Food copyWith({
     String? id,
     String? name,
@@ -34,6 +38,7 @@ class Food {
     bool? isRamadan,
     bool? isDiet,
     String? description,
+    bool? isVisible,
     bool clearImage = false,
     bool clearDescription = false,
   }) {
@@ -47,6 +52,7 @@ class Food {
       isRamadan: isRamadan ?? this.isRamadan,
       isDiet: isDiet ?? this.isDiet,
       description: clearDescription ? null : (description ?? this.description),
+      isVisible: isVisible ?? this.isVisible,
     );
   }
 }

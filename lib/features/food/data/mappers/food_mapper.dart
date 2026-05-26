@@ -14,6 +14,7 @@ extension FoodModelMapper on FoodModel {
       isRamadan: isRamadan,
       isDiet: isDiet,
       description: description,
+      isVisible: isVisible,
     );
   }
 }
@@ -30,6 +31,7 @@ extension FoodEntityMapper on Food {
       isRamadan: isRamadan,
       isDiet: isDiet,
       description: description,
+      isVisible: isVisible,
     );
   }
 }

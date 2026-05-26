@@ -11,6 +11,7 @@ import '../../../food/domain/entities/food.dart';
 import '../../../food/domain/entities/meal_category.dart';
 import '../../../food/domain/usecases/delete_food_usecase.dart';
 import '../../../food/domain/usecases/toggle_favorite_usecase.dart';
+import '../../../food/domain/usecases/toggle_visibility_usecase.dart';
 import '../../../food/presentation/providers/food_providers.dart';
 
 class FoodListPage extends ConsumerWidget {
@@ -72,6 +73,11 @@ class FoodListPage extends ConsumerWidget {
                   ref.invalidate(foodsProvider);
                   ref.invalidate(wheelFoodsProvider);
                 },
+                onToggleVisibility: () async {
+                  await sl<ToggleVisibilityUseCase>()(food.id);
+                  ref.invalidate(foodsProvider);
+                  ref.invalidate(wheelFoodsProvider);
+                },
               );
             },
           );
@@ -98,17 +104,19 @@ class _FoodTile extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onFavorite,
+    required this.onToggleVisibility,
   });
 
   final Food food;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onFavorite;
+  final VoidCallback onToggleVisibility;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Material(
+    final tile = Material(
       color: scheme.surfaceContainerHighest,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
@@ -140,11 +148,25 @@ class _FoodTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      food.name,
-                      style: Theme.of(context).textTheme.titleMedium,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            food.name,
+                            style: Theme.of(context).textTheme.titleMedium,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (!food.isVisible) ...[
+                          const SizedBox(width: 6),
+                          Icon(
+                            Icons.visibility_off_outlined,
+                            size: 16,
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ],
+                      ],
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -161,6 +183,19 @@ class _FoodTile extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                   ],
+                ),
+              ),
+              IconButton(
+                tooltip: food.isVisible
+                    ? 'hide_from_wheel'.tr()
+                    : 'show_in_wheel'.tr(),
+                onPressed: onToggleVisibility,
+                icon: Icon(
+                  food.isVisible
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  color:
+                      food.isVisible ? scheme.primary : scheme.onSurfaceVariant,
                 ),
               ),
               IconButton(
@@ -200,6 +235,9 @@ class _FoodTile extends StatelessWidget {
         ),
       ),
     );
+
+    if (food.isVisible) return tile;
+    return Opacity(opacity: 0.55, child: tile);
   }
 }
 

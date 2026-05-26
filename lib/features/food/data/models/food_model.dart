@@ -10,6 +10,7 @@ class FoodModel {
     this.isRamadan = false,
     this.isDiet = false,
     this.description,
+    this.isVisible = true,
   });
 
   final String id;
@@ -21,6 +22,7 @@ class FoodModel {
   final bool isRamadan;
   final bool isDiet;
   final String? description;
+  final bool isVisible;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -32,6 +34,7 @@ class FoodModel {
         'isRamadan': isRamadan,
         'isDiet': isDiet,
         'description': description,
+        'isVisible': isVisible,
       };
 
   factory FoodModel.fromJson(Map<String, dynamic> json) {
@@ -54,6 +57,7 @@ class FoodModel {
       isRamadan: isRamadan,
       isDiet: isDiet,
       description: json['description'] as String?,
+      isVisible: json['isVisible'] as bool? ?? true,
     );
   }
 
@@ -67,6 +71,7 @@ class FoodModel {
     bool? isRamadan,
     bool? isDiet,
     String? description,
+    bool? isVisible,
     bool clearImage = false,
     bool clearDescription = false,
   }) {
@@ -81,6 +86,7 @@ class FoodModel {
       isDiet: isDiet ?? this.isDiet,
       description:
           clearDescription ? null : (description ?? this.description),
+      isVisible: isVisible ?? this.isVisible,
     );
   }
 }

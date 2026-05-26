@@ -10,6 +10,7 @@ import '../../features/food/domain/usecases/delete_food_usecase.dart';
 import '../../features/food/domain/usecases/filter_foods_usecase.dart';
 import '../../features/food/domain/usecases/spin_wheel_usecase.dart';
 import '../../features/food/domain/usecases/toggle_favorite_usecase.dart';
+import '../../features/food/domain/usecases/toggle_visibility_usecase.dart';
 import '../storage/image_storage.dart';
 
 final sl = GetIt.instance;
@@ -38,5 +39,6 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton(() => AddFoodUseCase(sl()));
   sl.registerLazySingleton(() => DeleteFoodUseCase(sl()));
   sl.registerLazySingleton(() => ToggleFavoriteUseCase(sl()));
+  sl.registerLazySingleton(() => ToggleVisibilityUseCase(sl()));
   sl.registerLazySingleton(() => ImageStorage());
 }
