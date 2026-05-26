@@ -20,11 +20,11 @@ class FoodListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncFoods = ref.watch(foodsProvider);
+    ThemeData theme = Theme.of(context);
+    TextTheme textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('food_list_title'.tr()),
-      ),
+      appBar: AppBar(title: Text('food_list_title'.tr())),
       body: asyncFoods.when(
         data: (foods) {
           if (foods.isEmpty) {
@@ -40,10 +40,7 @@ class FoodListPage extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.outline,
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'empty_list'.tr(),
-                      textAlign: TextAlign.center,
-                    ),
+                    Text('empty_list'.tr(), textAlign: TextAlign.center),
                   ],
                 ),
               ),
@@ -51,9 +48,9 @@ class FoodListPage extends ConsumerWidget {
           }
           return ListView.separated(
             padding: const EdgeInsets.all(16),
+
             itemCount: foods.length,
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: 8),
+            separatorBuilder: (context, index) => const SizedBox(height: 8),
             itemBuilder: (context, i) {
               final food = foods[i];
               return _FoodTile(
@@ -85,15 +82,36 @@ class FoodListPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          await context.push(AppRoutes.foodNew);
-          ref.invalidate(foodsProvider);
-          ref.invalidate(wheelFoodsProvider);
-        },
-        icon: const Icon(Icons.add),
-        label: Text('add_food'.tr()),
-      ),
+      persistentFooterDecoration: BoxDecoration(),
+      persistentFooterButtons: [
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(12),
+              ),
+              backgroundColor: theme.colorScheme.primaryContainer,
+            ),
+            onPressed: () async {
+              await context.push(AppRoutes.foodNew);
+              ref.invalidate(foodsProvider);
+              ref.invalidate(wheelFoodsProvider);
+            },
+            child: Row(
+              mainAxisAlignment: .center,
+              spacing: 8,
+              children: [
+                Icon(Icons.add),
+                Text(
+                  'add_food'.tr(),
+                  style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -131,12 +149,10 @@ class _FoodTile extends StatelessWidget {
                 child: SizedBox(
                   width: 64,
                   height: 64,
-                  child: food.imagePath != null &&
+                  child:
+                      food.imagePath != null &&
                           File(food.imagePath!).existsSync()
-                      ? Image.file(
-                          File(food.imagePath!),
-                          fit: BoxFit.cover,
-                        )
+                      ? Image.file(File(food.imagePath!), fit: BoxFit.cover)
                       : ColoredBox(
                           color: scheme.surfaceContainerHigh,
                           child: Icon(Icons.fastfood, color: scheme.outline),
@@ -172,8 +188,8 @@ class _FoodTile extends StatelessWidget {
                     Text(
                       _mealLabel(food.category),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                     if (food.tags.isNotEmpty)
                       Text(
@@ -194,8 +210,9 @@ class _FoodTile extends StatelessWidget {
                   food.isVisible
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color:
-                      food.isVisible ? scheme.primary : scheme.onSurfaceVariant,
+                  color: food.isVisible
+                      ? scheme.primary
+                      : scheme.onSurfaceVariant,
                 ),
               ),
               IconButton(

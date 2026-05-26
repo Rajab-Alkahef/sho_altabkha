@@ -35,10 +35,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   bool _hasActiveFilter(FoodFilter f) {
-    return f.mealType != null ||
-        f.ramadanOnly ||
-        f.dietOnly ||
-        f.favoritesOnly;
+    return f.mealType != null || f.ramadanOnly || f.dietOnly || f.favoritesOnly;
   }
 
   void _maybeAutoResetFilters() {
@@ -50,15 +47,11 @@ class _HomePageState extends ConsumerState<HomePage> {
     final filter = ref.read(foodFilterProvider).valueOrNull;
     if (filter == null || !_hasActiveFilter(filter)) return;
 
-    ref
-        .read(foodFilterProvider.notifier)
-        .setFilter(const FoodFilter());
+    ref.read(foodFilterProvider.notifier).setFilter(const FoodFilter());
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text('filters_reset_message'.tr())),
-      );
+      ..showSnackBar(SnackBar(content: Text('filters_reset_message'.tr())));
   }
 
   @override
@@ -97,12 +90,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           IconButton(
             tooltip: isDark ? 'theme_light'.tr() : 'theme_dark'.tr(),
-            onPressed: () =>
-                ref.read(themeModeProvider.notifier).toggle(),
+            onPressed: () => ref.read(themeModeProvider.notifier).toggle(),
             icon: Icon(
-              isDark
-                  ? Icons.light_mode_rounded
-                  : Icons.dark_mode_rounded,
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
             ),
           ),
         ],
