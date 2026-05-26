@@ -11,6 +11,9 @@ extension FoodModelMapper on FoodModel {
       tags: tags,
       imagePath: imagePath,
       isFavorite: isFavorite,
+      isRamadan: isRamadan,
+      isDiet: isDiet,
+      description: description,
     );
   }
 }
@@ -24,6 +27,9 @@ extension FoodEntityMapper on Food {
       tags: tags,
       imagePath: imagePath,
       isFavorite: isFavorite,
+      isRamadan: isRamadan,
+      isDiet: isDiet,
+      description: description,
     );
   }
 }

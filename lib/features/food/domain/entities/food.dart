@@ -9,6 +9,9 @@ class Food {
     this.tags = const [],
     this.imagePath,
     this.isFavorite = false,
+    this.isRamadan = false,
+    this.isDiet = false,
+    this.description,
   });
 
   final String id;
@@ -17,6 +20,9 @@ class Food {
   final List<String> tags;
   final String? imagePath;
   final bool isFavorite;
+  final bool isRamadan;
+  final bool isDiet;
+  final String? description;
 
   Food copyWith({
     String? id,
@@ -25,7 +31,11 @@ class Food {
     List<String>? tags,
     String? imagePath,
     bool? isFavorite,
+    bool? isRamadan,
+    bool? isDiet,
+    String? description,
     bool clearImage = false,
+    bool clearDescription = false,
   }) {
     return Food(
       id: id ?? this.id,
@@ -34,6 +44,9 @@ class Food {
       tags: tags ?? this.tags,
       imagePath: clearImage ? null : (imagePath ?? this.imagePath),
       isFavorite: isFavorite ?? this.isFavorite,
+      isRamadan: isRamadan ?? this.isRamadan,
+      isDiet: isDiet ?? this.isDiet,
+      description: clearDescription ? null : (description ?? this.description),
     );
   }
 }

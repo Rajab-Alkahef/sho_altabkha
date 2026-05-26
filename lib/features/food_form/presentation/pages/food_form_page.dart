@@ -29,10 +29,13 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _name;
   late TextEditingController _tags;
+  late TextEditingController _description;
   MealCategory _category = MealCategory.lunch;
   String? _imagePath;
   String? _initialImagePath;
   bool _removeImage = false;
+  bool _isRamadan = false;
+  bool _isDiet = false;
   bool _loaded = false;
 
   @override
@@ -40,6 +43,7 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
     super.initState();
     _name = TextEditingController();
     _tags = TextEditingController();
+    _description = TextEditingController();
     if (widget.foodId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _loadExisting());
     } else {
@@ -51,6 +55,7 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
   void dispose() {
     _name.dispose();
     _tags.dispose();
+    _description.dispose();
     super.dispose();
   }
 
@@ -62,6 +67,9 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
     _name.text = f.name;
     _category = f.category;
     _tags.text = f.tags.join(', ');
+    _description.text = f.description ?? '';
+    _isRamadan = f.isRamadan;
+    _isDiet = f.isDiet;
     _imagePath = f.imagePath;
     _initialImagePath = f.imagePath;
     setState(() => _loaded = true);
@@ -102,6 +110,8 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
     final all = await ref.read(foodRepositoryProvider).getAllFoods();
     final existing = all.firstWhereOrNull((e) => e.id == id);
 
+    final descriptionText = _description.text.trim();
+
     final food = Food(
       id: id,
       name: _name.text.trim(),
@@ -109,6 +119,9 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
       tags: tagList,
       imagePath: _removeImage ? null : _imagePath,
       isFavorite: existing?.isFavorite ?? false,
+      isRamadan: _isRamadan,
+      isDiet: _isDiet,
+      description: descriptionText.isEmpty ? null : descriptionText,
     );
 
     await sl<AddFoodUseCase>()(food);
@@ -122,15 +135,11 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
   Widget build(BuildContext context) {
     final isEdit = widget.foodId != null;
     if (isEdit && !_loaded) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isEdit ? 'edit_food'.tr() : 'add_food'.tr()),
-      ),
+      appBar: AppBar(title: Text(isEdit ? 'edit_food'.tr() : 'add_food'.tr())),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -164,11 +173,40 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
             ),
             const SizedBox(height: 16),
             TextFormField(
+              controller: _description,
+              decoration: InputDecoration(
+                labelText: 'description'.tr(),
+                hintText: 'description_hint'.tr(),
+                alignLabelWithHint: true,
+              ),
+              minLines: 2,
+              maxLines: 4,
+              textInputAction: TextInputAction.newline,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
               controller: _tags,
               decoration: InputDecoration(
                 labelText: 'tags'.tr(),
                 hintText: 'tags_hint'.tr(),
               ),
+            ),
+            const SizedBox(height: 8),
+            CheckboxListTile(
+              value: _isRamadan,
+              onChanged: (v) => setState(() => _isRamadan = v ?? false),
+              title: Text('ramadan_meal'.tr()),
+              secondary: const Icon(Icons.nightlight_round),
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: EdgeInsets.zero,
+            ),
+            CheckboxListTile(
+              value: _isDiet,
+              onChanged: (v) => setState(() => _isDiet = v ?? false),
+              title: Text('diet_meal'.tr()),
+              secondary: const Icon(Icons.spa_outlined),
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: EdgeInsets.zero,
             ),
             const SizedBox(height: 20),
             Row(
@@ -178,9 +216,11 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
                     aspectRatio: 16 / 9,
                     child: Material(
                       borderRadius: BorderRadius.circular(16),
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                      child: _imagePath != null &&
-                              File(_imagePath!).existsSync()
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
+                      child:
+                          _imagePath != null && File(_imagePath!).existsSync()
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: Image.file(
@@ -220,10 +260,7 @@ class _FoodFormPageState extends ConsumerState<FoodFormPage> {
               ],
             ),
             const SizedBox(height: 28),
-            FilledButton(
-              onPressed: _save,
-              child: Text('save'.tr()),
-            ),
+            FilledButton(onPressed: _save, child: Text('save'.tr())),
           ],
         ),
       ),

@@ -12,6 +12,7 @@ Future<void> showFilterSheet(BuildContext context, WidgetRef ref) async {
 
   MealCategory? meal = current.mealType;
   var ramadan = current.ramadanOnly;
+  var diet = current.dietOnly;
   var fav = current.favoritesOnly;
 
   await showModalBottomSheet<void>(
@@ -71,6 +72,13 @@ Future<void> showFilterSheet(BuildContext context, WidgetRef ref) async {
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
                 CheckboxListTile(
+                  value: diet,
+                  onChanged: (v) => setLocal(() => diet = v ?? false),
+                  title: Text('diet_only'.tr()),
+                  secondary: const Icon(Icons.spa_outlined),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                CheckboxListTile(
                   value: fav,
                   onChanged: (v) => setLocal(() => fav = v ?? false),
                   title: Text('favorites_only'.tr()),
@@ -83,6 +91,7 @@ Future<void> showFilterSheet(BuildContext context, WidgetRef ref) async {
                     final next = FoodFilter(
                       mealType: meal,
                       ramadanOnly: ramadan,
+                      dietOnly: diet,
                       favoritesOnly: fav,
                     );
                     await ref.read(foodFilterProvider.notifier).setFilter(next);
