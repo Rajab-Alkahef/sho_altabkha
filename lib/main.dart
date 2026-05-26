@@ -29,11 +29,12 @@ class ShoAltabkhaApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = createAppRouter();
     final themeMode = ref.watch(themeModeProvider);
+    final fontFamily = AppTheme.fontForLocale(context.locale);
     return MaterialApp.router(
       title: 'Sho Altabkha',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(fontFamily: fontFamily),
+      darkTheme: AppTheme.dark(fontFamily: fontFamily),
       themeMode: themeMode,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,

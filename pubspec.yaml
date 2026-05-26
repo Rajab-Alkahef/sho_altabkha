@@ -42,3 +42,70 @@ flutter:
 
   assets:
     - assets/translations/
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/cairo/CAIRO-EXTRALIGHT-BF643384EF1B106.TTF
+          weight: 200
+        - asset: assets/fonts/cairo/CAIRO-LIGHT-BF643384EF1C5F4.TTF
+          weight: 300
+        - asset: assets/fonts/cairo/CAIRO.TTF
+          weight: 400
+        - asset: assets/fonts/cairo/CAIRO-MEDIUM-BF643384EF5D193.TTF
+          weight: 500
+        - asset: assets/fonts/cairo/CAIRO-SEMIBOLD-BF643384EF0A2E7.TTF
+          weight: 600
+        - asset: assets/fonts/cairo/CAIRO-BOLD.TTF
+          weight: 700
+        - asset: assets/fonts/cairo/CAIRO-EXTRABOLD-BF643384EF234BF.TTF
+          weight: 800
+        - asset: assets/fonts/cairo/CAIRO-BLACK-BF643384EEF038F.TTF
+          weight: 900
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/montserrat/MONTSERRAT-THIN.OTF
+          weight: 100
+        - asset: assets/fonts/montserrat/MONTSERRAT-THINITALIC.OTF
+          weight: 100
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-EXTRALIGHT.OTF
+          weight: 200
+        - asset: assets/fonts/montserrat/MONTSERRAT-EXTRALIGHTITALIC.OTF
+          weight: 200
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-LIGHT.OTF
+          weight: 300
+        - asset: assets/fonts/montserrat/MONTSERRAT-LIGHTITALIC.OTF
+          weight: 300
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-REGULAR.OTF
+          weight: 400
+        - asset: assets/fonts/montserrat/MONTSERRAT-ITALIC.OTF
+          weight: 400
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-MEDIUM.OTF
+          weight: 500
+        - asset: assets/fonts/montserrat/MONTSERRAT-MEDIUMITALIC.OTF
+          weight: 500
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-SEMIBOLD.OTF
+          weight: 600
+        - asset: assets/fonts/montserrat/MONTSERRAT-SEMIBOLDITALIC.OTF
+          weight: 600
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-BOLD.OTF
+          weight: 700
+        - asset: assets/fonts/montserrat/MONTSERRAT-BOLDITALIC.OTF
+          weight: 700
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-EXTRABOLD.OTF
+          weight: 800
+        - asset: assets/fonts/montserrat/MONTSERRAT-EXTRABOLDITALIC.OTF
+          weight: 800
+          style: italic
+        - asset: assets/fonts/montserrat/MONTSERRAT-BLACK.OTF
+          weight: 900
+        - asset: assets/fonts/montserrat/MONTSERRAT-BLACKITALIC.OTF
+          weight: 900
+          style: italic
