@@ -89,13 +89,13 @@ class _HomePageState extends ConsumerState<HomePage> {
             },
             icon: const Icon(Icons.language_rounded),
           ),
-          IconButton(
-            tooltip: isDark ? 'theme_light'.tr() : 'theme_dark'.tr(),
-            onPressed: () => ref.read(themeModeProvider.notifier).toggle(),
-            icon: Icon(
-              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-            ),
-          ),
+          // IconButton(
+          //   tooltip: isDark ? 'theme_light'.tr() : 'theme_dark'.tr(),
+          //   onPressed: () => ref.read(themeModeProvider.notifier).toggle(),
+          //   icon: Icon(
+          //     isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+          //   ),
+          // ),
         ],
       ),
       body: wheel.when(

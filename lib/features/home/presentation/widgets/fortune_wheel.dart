@@ -6,15 +6,15 @@ import 'package:flutter/services.dart';
 
 import '../../../food/domain/entities/food.dart';
 
-const List<Color> _kWheelPalette = [
-  Color(0xFFEF6C6C), // coral
-  Color(0xFFFFB74D), // amber
-  Color(0xFFFFD54F), // mustard
-  Color(0xFF81C784), // mint
-  Color(0xFF4DB6AC), // teal
-  Color(0xFF64B5F6), // sky
-  Color(0xFF7986CB), // indigo
-  Color(0xFFBA68C8), // orchid
+const List<List<Color>> _kWheelPalette = [
+  [Color(0xFFFF6B6B), Color(0xFFFF8E53)], // sunset
+  [Color(0xFFFFA751), Color(0xFFFFE259)], // gold sunrise
+  [Color(0xFF11998E), Color(0xFF38EF7D)], // emerald
+  [Color(0xFF36D1DC), Color(0xFF5B86E5)], // ocean
+  [Color(0xFF8E2DE2), Color(0xFF4A00E0)], // royal purple
+  [Color(0xFFEC008C), Color(0xFFFC6767)], // pink heat
+  [Color(0xFF7F00FF), Color(0xFFE100FF)], // violet pop
+  [Color(0xFFFF512F), Color(0xFFF09819)], // tangerine
 ];
 
 class FortuneWheel extends StatefulWidget {
@@ -236,7 +236,7 @@ class _WheelPainter extends CustomPainter {
 
   final List<Food> items;
   final double rotation;
-  final List<Color> palette;
+  final List<List<Color>> palette;
   final Color ringColor;
   final Color dividerColor;
   final Color hubColor;
@@ -262,39 +262,58 @@ class _WheelPainter extends CustomPainter {
       false,
     );
 
-    // Slices with radial gradient for depth.
+    // Slices with sweep gradient pairs for a modern vibrant look.
     for (var i = 0; i < n; i++) {
       final isHi = highlightIndex == i;
-      final base = palette[i % palette.length];
-      final gradient = RadialGradient(
-        center: Alignment.center,
-        radius: 0.5,
-        colors: [
-          Color.lerp(base, Colors.white, 0.18)!,
-          base,
-          Color.lerp(base, Colors.black, 0.12)!,
-        ],
-        stops: const [0.0, 0.6, 1.0],
+      final pair = palette[i % palette.length];
+      final c1 = pair[0];
+      final c2 = pair[1];
+      final start = -pi / 2 + rotation + i * sweep;
+
+      // Outer glow under highlighted slice (winner pop).
+      if (isHi) {
+        final glow = Paint()
+          ..color = c2.withValues(alpha: 0.55)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18);
+        canvas.drawArc(rect, start, sweep, true, glow);
+      }
+
+      final sliceGradient = SweepGradient(
+        startAngle: start,
+        endAngle: start + sweep,
+        colors: [c1, c2],
       );
       final paint = Paint()
-        ..shader = gradient.createShader(rect)
+        ..shader = sliceGradient.createShader(rect)
         ..style = PaintingStyle.fill;
-      final start = -pi / 2 + rotation + i * sweep;
       canvas.drawArc(rect, start, sweep, true, paint);
 
+      // Inner radial darkening near rim for depth.
+      final depth = Paint()
+        ..shader = RadialGradient(
+          center: Alignment.center,
+          radius: 0.5,
+          colors: [
+            Colors.transparent,
+            Colors.black.withValues(alpha: isHi ? 0.05 : 0.18),
+          ],
+          stops: const [0.55, 1.0],
+        ).createShader(rect);
+      canvas.drawArc(rect, start, sweep, true, depth);
+
       if (isHi) {
-        final highlight = Paint()
-          ..color = Colors.white.withValues(alpha: 0.18)
+        final pop = Paint()
+          ..color = Colors.white.withValues(alpha: 0.22)
           ..style = PaintingStyle.fill;
-        canvas.drawArc(rect, start, sweep, true, highlight);
+        canvas.drawArc(rect, start, sweep, true, pop);
       }
     }
 
-    // Slice dividers.
+    // Slice dividers — softer, with subtle glow.
     final divider = Paint()
-      ..color = dividerColor
+      ..color = dividerColor.withValues(alpha: 0.45)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
+      ..strokeWidth = 1.2;
     for (var i = 0; i < n; i++) {
       final a = -pi / 2 + rotation + i * sweep;
       canvas.drawLine(
@@ -303,6 +322,18 @@ class _WheelPainter extends CustomPainter {
         divider,
       );
     }
+
+    // Glassy dome highlight on top half.
+    final dome = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.center,
+        colors: [
+          Colors.white.withValues(alpha: 0.22),
+          Colors.white.withValues(alpha: 0.0),
+        ],
+      ).createShader(rect);
+    canvas.drawCircle(center, radius, dome);
 
     // Labels.
     final labelFont = n <= 6
@@ -327,10 +358,14 @@ class _WheelPainter extends CustomPainter {
             height: 1.05,
             shadows: const [
               Shadow(
-                color: Color(0x66000000),
-                // blurRadius: 1,
+                color: Color(0x99000000),
+                blurRadius: 4,
+                offset: Offset(0, 1.5),
+              ),
+              Shadow(
+                color: Color(0x55000000),
                 blurRadius: 1,
-                offset: Offset(0, 1),
+                offset: Offset(0, 0.5),
               ),
             ],
           ),
@@ -349,28 +384,39 @@ class _WheelPainter extends CustomPainter {
       canvas.restore();
     }
 
-    // Outer ring with subtle gradient.
-    final ringRect = Rect.fromCircle(center: center, radius: radius + 6);
+    // Outer ring — glossy multi-stop sweep gradient with metallic highlights.
+    final ringRect = Rect.fromCircle(center: center, radius: radius + 8);
     final outerRing = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 10
+      ..strokeWidth = 12
       ..shader = SweepGradient(
         colors: [
-          ringColor.withValues(alpha: 0.85),
-          ringColor.withValues(alpha: 0.55),
-          ringColor.withValues(alpha: 0.85),
+          ringColor,
+          Colors.white.withValues(alpha: 0.95),
+          ringColor,
+          Color.lerp(ringColor, Colors.black, 0.35)!,
+          ringColor,
+          Colors.white.withValues(alpha: 0.95),
+          ringColor,
         ],
-        stops: const [0, 0.5, 1],
+        stops: const [0.0, 0.15, 0.35, 0.5, 0.65, 0.85, 1.0],
         transform: GradientRotation(rotation),
       ).createShader(ringRect);
-    canvas.drawCircle(center, radius + 6, outerRing);
+    canvas.drawCircle(center, radius + 8, outerRing);
 
-    // Thin inner ring at slice edge for crispness.
-    final innerRing = Paint()
-      ..color = Colors.white.withValues(alpha: 0.6)
+    // Thin bright inner rim at slice edge for crispness.
+    final innerRim = Paint()
+      ..color = Colors.white.withValues(alpha: 0.75)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
-    canvas.drawCircle(center, radius, innerRing);
+    canvas.drawCircle(center, radius, innerRim);
+
+    // Subtle dark hairline just inside the outer ring for crisp separation.
+    final hairline = Paint()
+      ..color = Colors.black.withValues(alpha: 0.25)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    canvas.drawCircle(center, radius + 2, hairline);
   }
 
   @override
